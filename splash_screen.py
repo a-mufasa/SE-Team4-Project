@@ -3,25 +3,25 @@ from tkinter import *
 
 def splash_screen():
     
-    #make it a toplevel screen
+    #make it a toplevel window
     splash_root = Toplevel()
     splash_root.title("Splash Screen")
     
     #gets rid of the window boarders
     splash_root.overrideredirect(True)
         
-    #pull image to be shown and label/pack into screen
+    #pull image to be shown and label/pack into window
     splash_image = PhotoImage(file="splash_logo.png")
     
     #pull size info from image
     winWidth = splash_image.width()
     winHeight = splash_image.height()
     
-    #label and pack image to screen
+    #label and pack image to window
     splash_lable = Label(master = splash_root, image = splash_image)
     splash_lable.pack()
     
-    #some stuff to make it open in the upper middle of the screen
+    #some stuff to make it open in the upper middle of the window
     x = int(splash_root.winfo_screenwidth()/2 - winWidth/2)
     y = int(splash_root.winfo_screenheight()/3 - winHeight/2)
     splash_root.geometry(f'{winWidth}x{winHeight}+{x}+{y}') 
@@ -37,7 +37,7 @@ def splash_screen():
 #Test main and function call
 if __name__ == '__main__':
     
-    #a "main" screen to call the function from.
+    #a "main" menu to call the function from.
     root = Tk()
     root.title("Test Program")
     root.geometry("800x800")
