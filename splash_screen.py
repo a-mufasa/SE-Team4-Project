@@ -33,7 +33,16 @@ def splash_screen():
     #return 0
     return 0                   
 
-'''
+
+def testing():
+	root = Tk()      
+	canvas = Canvas(root, width = 800, height = 800)      
+	canvas.pack()      
+	img = PhotoImage(file="splash_logo.png")      
+	canvas.create_image(20,20, anchor=NW, image=img)    
+	root.after(3000, root.destroy)  
+	root.mainloop() 
+
 #Test main and function call
 if __name__ == '__main__':
     
@@ -44,4 +53,4 @@ if __name__ == '__main__':
     my_button = Button(root, text="test call",command=splash_screen)
     my_button.pack(pady=20)
     root.mainloop()
-'''
+
