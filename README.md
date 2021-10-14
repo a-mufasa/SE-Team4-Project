@@ -16,3 +16,12 @@ INSTALLING PSYCOPG2:
 
 
 Both the pre-requiste packages for the application are now installed.
+
+
+------------------------------------------------------------------------
+Note:
+
+1) As of now, the command that removes the border for the splash_screen only works on windows, this command makes it invisible on mac
+
+
+------------------------------------------------------------------------
