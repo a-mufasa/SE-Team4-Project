@@ -5,8 +5,9 @@ from data_queries import query
 
 
 
-    		
 
+
+entry=True #skip unnecessary queries
 
 
 def player_entry():	
@@ -27,6 +28,7 @@ def player_entry():
 	green_entries= [[None]*2 for i in range(NUMBER_OF_ROWS)]
 	all_entries= [None]*(4*NUMBER_OF_ROWS)# one array to reference all int entries
 	current_focus= [None]*2
+	
 	
 	
 	# returns string that created on rgb and can be used in bg or fg
@@ -66,7 +68,7 @@ def player_entry():
 		if window.focus_get().get() != None:
 			print("progress")
 
-	entry=True #skip unnecessary queries
+
 	def focus_out_handle(event):
 		global entry
 		if (window.focus_get() != None):
@@ -85,6 +87,7 @@ def player_entry():
 					db_codename=query(str(widget_value))
 					
 					if (db_codename != None):
+						next_widget(current_focus[1]).delete(0,END)
 						next_widget(current_focus[1]).insert(0,db_codename)
 						next_widget(next_widget(current_focus[1])).focus_set()
 						entry=False
@@ -98,6 +101,7 @@ def player_entry():
 				widget_value = current_focus[1].get()
 				if (entry == False):#skip if entered from db
 					entry=True
+					return
 					
 				elif (prev_widget(current_focus[1]).get() != ""):#update databse/widgets
 					query(prev_widget(current_focus[1]).get(),current_focus[1].get())
@@ -109,7 +113,7 @@ def player_entry():
 					prev_widget(current_focus[1]).focus_set()
 					current_focus[1].delete(0,END)
 					
-					
+			print(str(current_focus[0].get()) + " " +str(current_focus[1].get()))
 		else:
 			window.focus() #when coming back to window, reset focus
 		
