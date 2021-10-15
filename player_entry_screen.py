@@ -6,6 +6,7 @@ from data_queries import query
 
 
     		
+entry=True #skip unnecessary queries
 
 
 
@@ -66,7 +67,6 @@ def player_entry():
 		if window.focus_get().get() != None:
 			print("progress")
 
-	entry=True #skip unnecessary queries
 	def focus_out_handle(event):
 		global entry
 		if (window.focus_get() != None):
