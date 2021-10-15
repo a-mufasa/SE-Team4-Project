@@ -1,8 +1,5 @@
 #!/usr/bin/python
 import psycopg2
-from configparser import ConfigParser
-import tkinter as tk
-from tkinter import simpledialog
 
 def make_connections():
 	a=psycopg2.connect(
@@ -13,6 +10,7 @@ def make_connections():
 	return a
 
 def query(ident, codename=None):
+	ident=int(ident)
 	ident_string=str(ident)
 	con = None
 	try:
@@ -22,11 +20,13 @@ def query(ident, codename=None):
 		sql_execute = 'select * from player where id='+ident_string
 		cur.execute(sql_execute)
 		player_ids = cur.fetchall()
-		if (len(player_ids) != 0):
+		if (len(player_ids) != 0 and codename == None):
 			codename = player_ids[0][3]
-		elif (codename != None):
+		if (len(player_ids) == 0 and codename != None):
 			cur.execute('insert into player(id,codename) values(%s,%s)',(ident,codename))
-			cur.execute('commit')
+		if (len(player_ids) != 0 and codename != None):
+			cur.execute('update player set codename = %s where id = %s',(codename,ident))
+		cur.execute('commit')
 		cur.close()
 			
 	except (Exception, psycopg2.DatabaseError) as error:
@@ -67,4 +67,8 @@ def connectTest():
 if __name__ == '__main__':
 	#testing
 	connectTest()
+	print(query(1))
+	print(query(100))
+	print(query(100,"test dud"))
+	print(query(100))
 	
