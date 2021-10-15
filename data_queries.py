@@ -9,23 +9,43 @@ def make_connections():
 		password="9c0c8c7946daf4372e1188d21cff456e0c2e5ab3d06e934edb6e0fc54777c6f8")
 	return a
 
+def local_data():#maybe use in future -- save database here for quick checks, but still maintain ability to edit database when needed (then rerun function to get new table
+	con = None
+	try:
+		print("open")
+		con = make_connections()
+		cur = con.cursor() #enables running sql
+		cur.execute('select * from player')
+		data=cur.fetchall()
+		cur.close()
+			
+	except (Exception, psycopg2.DatabaseError) as error:
+		print(error)
+	finally:
+		if con is not None:
+			con.close()
+			print('close')
+	return data
+
 def query(ident, codename=None):
-	ident=int(ident)
 	ident_string=str(ident)
 	con = None
 	try:
 		print("open")
 		con = make_connections()
 		cur = con.cursor() #enables running sql
+		
 		sql_execute = 'select * from player where id='+ident_string
 		cur.execute(sql_execute)
 		player_ids = cur.fetchall()
+		
 		if (len(player_ids) != 0 and codename == None):
 			codename = player_ids[0][3]
 		if (len(player_ids) == 0 and codename != None):
-			cur.execute('insert into player(id,codename) values(%s,%s)',(ident,codename))
+			cur.execute('insert into player(id,codename) values(%s,%s)',(ident_string,codename))
 		if (len(player_ids) != 0 and codename != None):
-			cur.execute('update player set codename = %s where id = %s',(codename,ident))
+			cur.execute('update player set codename = %s where id = %s',(codename,ident_string))
+		
 		cur.execute('commit')
 		cur.close()
 			
@@ -67,8 +87,9 @@ def connectTest():
 if __name__ == '__main__':
 	#testing
 	connectTest()
-	print(query(1))
+	local_data()
+	'''print(query(1))
 	print(query(100))
 	print(query(100,"test dud"))
-	print(query(100))
+	print(query(100))'''
 	

@@ -1,19 +1,16 @@
 from tkinter import *
+import tkinter.messagebox
 from tkinter.font import Font
-from tkinter import messagebox 
-
-# returns string that created on rgb and can be used in bg or fg
-def from_rgb(rgb):
-    return "#%02x%02x%02x" % rgb
+from data_queries import query
 
 
-# Function that will called if we click F1
-def clear_key():
-    """
-    Here should be returning in player input screen
-    """
-    pass
-def player_entry():
+
+    		
+
+
+
+def player_entry():	
+
 	#  CONSTANTS
 	DISTANCE_BETWEEN_BUTTONS = 80
 	Y_CORD_OF_BUTTON = 580
@@ -23,8 +20,109 @@ def player_entry():
 	RED_CANVAS_X_PLACE = 200
 	CANVAS_Y_PLACE = 32
 	GREEN_CANVAS_X_PLACE = 500
-	NUMBER_OF_ROWS = 16
+	NUMBER_OF_ROWS = 15
 	
+	#creates 2d array for teams
+	red_entries= [[None]*2 for i in range(NUMBER_OF_ROWS)]
+	green_entries= [[None]*2 for i in range(NUMBER_OF_ROWS)]
+	all_entries= [None]*(4*NUMBER_OF_ROWS)# one array to reference all int entries
+	current_focus= [None]*2
+	
+	
+	# returns string that created on rgb and can be used in bg or fg
+	def from_rgb(rgb):
+		return "#%02x%02x%02x" % rgb
+	
+	
+	# Function that will called if we click F1
+	def clear_key():
+		"""
+		Here should be returning in player input screen
+		"""
+		pass
+	#functions to navigate widgets
+	def next_widget(current_widget):
+		i=0
+		while (i < len(all_entries) and current_widget != all_entries[i]):
+			i+=1
+		if i==len(all_entries):#last widget
+			i= -1
+		return all_entries[i+1]
+
+	def prev_widget(current_widget):
+		i=0
+		while (i < len(all_entries) and current_widget != all_entries[i]):
+			i+=1
+		return all_entries[i-1]
+		
+	def update_all_widgets(current_widget):#make sure same id have same name, most recently entered
+		tmp = current_widget.get()
+		for i in range(0,len(all_entries),2):
+			if all_entries[i].get() == prev_widget(current_widget).get():
+				all_entries[i+1].delete(0,END)
+				all_entries[i+1].insert(0,tmp)
+	
+	def focus_in_handle(event):
+		if window.focus_get().get() != None:
+			print("progress")
+
+	entry=True #skip unnecessary queries
+	def focus_out_handle(event):
+		global entry
+		if (window.focus_get() != None):
+			current_focus[1]=current_focus[0]
+			current_focus[0]=window.focus_get()
+			if (current_focus[0]==current_focus[1]):
+				return
+			
+			widget_name = str(current_focus[1])[-1]
+			if (widget_name == "y"):
+				widget_name = "1" #first widget ends in y, replace with 0 to avoid error
+			if (ord(widget_name) % 2 == 1): #left
+				widget_value = current_focus[1].get()
+				
+				if (widget_value.isnumeric()):
+					db_codename=query(str(widget_value))
+					
+					if (db_codename != None):
+						next_widget(current_focus[1]).insert(0,db_codename)
+						next_widget(next_widget(current_focus[1])).focus_set()
+						entry=False
+					
+				elif widget_value != "":#allow tab between widgets, but no str
+					current_focus[1].delete(0,END)
+					tkinter.messagebox.showinfo("Invalid Input",  "Please enter a positive integer")
+					current_focus[1].focus_set()
+					
+			else:
+				widget_value = current_focus[1].get()
+				if (entry == False):#skip if entered from db
+					entry=True
+					
+				elif (prev_widget(current_focus[1]).get() != ""):#update databse/widgets
+					query(prev_widget(current_focus[1]).get(),current_focus[1].get())
+					next_widget(current_focus[1]).focus_set()
+					update_all_widgets(current_focus[1])
+					
+				elif current_focus[1].get() != "":
+					tkinter.messagebox.showinfo("Invalid Input",  "Please enter ID first")
+					prev_widget(current_focus[1]).focus_set()
+					current_focus[1].delete(0,END)
+					
+					
+		else:
+			window.focus() #when coming back to window, reset focus
+		
+	def test_saved_entries(event):
+		print("start")
+		for i in range(len(red_entries)):
+			print(red_entries[i][0].get() + " " + red_entries[i][1].get() + "\t" + green_entries[i][0].get() + " " + green_entries[i][1].get())
+		print("end")
+		print("start")
+		for i in range(len(current_focus)):
+			print(str(current_focus[i]))
+		print("end")
+
 	# Window settings
 	window = Tk()
 	window.title("Entry Terminal")
@@ -90,8 +188,6 @@ def player_entry():
 							 state=DISABLED)
 	green_team_name.place(x=80, y=2)
 	
-	a = [ [1]*4 for i in range(NUMBER_OF_ROWS)]
-	print(a)
 	
 	#  Entries and checkbuttons in Canvases
 	for number_of_row in range(NUMBER_OF_ROWS):
@@ -105,42 +201,89 @@ def player_entry():
 											   bg=from_rgb((0, 51, 0)), activebackground=from_rgb((0, 51, 0)))
 		green_canvas_checkbutton.place(x=5, y=32 + number_of_row * 28)'''
 	
-		red_canvas_number_of_row_label = Label(red_canvas, text=str(number_of_row), font=helvetica8,
+		red_canvas_number_of_row_label = Label(red_canvas, text=str(number_of_row+1), font=helvetica8,
 											   bg=from_rgb((51, 0, 0)), fg="white")
 		red_canvas_number_of_row_label.place(x=23,  y=36 + number_of_row * 28)
-	
-		red_canvas_first_entry = Entry(red_canvas, font=helvetica14, width=10)
+		red_first_sv = StringVar()#store first entry
+		red_canvas_first_entry = Entry(red_canvas, font=helvetica14, width=10, textvariable=red_first_sv)
 		red_canvas_first_entry.place(x=40, y=35 + number_of_row * 28)
-		red_canvas_second_entry = Entry(red_canvas, font=helvetica14, width=12)
+		red_second_sv = StringVar()#store second entry
+		red_canvas_second_entry = Entry(red_canvas, font=helvetica14, width=12, textvariable=red_second_sv)
 		red_canvas_second_entry.place(x=155, y=35 + number_of_row * 28)
 	
-		green_canvas_first_entry = Entry(green_canvas, font=helvetica14, width=10)
+		green_first_sv = StringVar()#store first entry
+		green_canvas_first_entry = Entry(green_canvas, font=helvetica14, width=10, textvariable=green_first_sv)
 		green_canvas_first_entry.place(x=40, y=35 + number_of_row * 28)
-		green_canvas_second_entry = Entry(green_canvas, font=helvetica14, width=12)
+		green_second_sv = StringVar()
+		green_canvas_second_entry = Entry(green_canvas, font=helvetica14, width=12, textvariable=green_second_sv)
 		green_canvas_second_entry.place(x=155, y=35 + number_of_row * 28)
-		
-		a[number_of_row][0]=red_canvas_first_entry.get()
-		print(a)
 	
-		green_canvas_number_of_row_label = Label(green_canvas, text=str(number_of_row), font=helvetica8,
+		green_canvas_number_of_row_label = Label(green_canvas, text=str(number_of_row+1), font=helvetica8,
 												 bg=from_rgb((0, 51, 0)), fg="white")
 		green_canvas_number_of_row_label.place(x=23,  y=36 + number_of_row * 28)
+		#store widgets in array
+		red_entries[number_of_row][0]=red_canvas_first_entry
+		red_entries[number_of_row][1]=red_canvas_second_entry
+		green_entries[number_of_row][0]=green_canvas_first_entry
+		green_entries[number_of_row][1]=green_canvas_second_entry
 		"""
 			For next person:
 				save values as you think better.
 				I think you should save check_values, checkbuttons, first_entries and second_entries in 2d array.
 		"""
+		
+	red_entries[0][0].focus_set()
+	current_focus[0]=red_entries[0][0]
 	
-	def motion(event):
-	  print("Mouse position: (%s %s)" % (event.x, event.y))
-	  return
-	  
-	def something(event_exit_widget):
-		'''
-		if exiting index, call queries function, if codename returned != None, then insert it into the second box
-		else, allow tab into box and once exiting that box, call queries with that index and codename to insert into DB
-		'''
-	window.bind('<Tab>',motion)
-	window.bind('<1>',motion)
+	for a in range(NUMBER_OF_ROWS):#set all_entries value
+		all_entries[4*a]=red_entries[a][0]
+		all_entries[4*a+1]=red_entries[a][1]
+		all_entries[4*a+2]=green_entries[a][0]
+		all_entries[4*a+3]=green_entries[a][1]
+	
+	window.bind('<Return>', test_saved_entries)
+	#window.bind('<FocusIn>', focus_in_handle)
+	window.bind('<FocusOut>', focus_out_handle)
+	
+	
+	return_all_entries=[[None]*4 for i in range(NUMBER_OF_ROWS)]
+	def closing():
+		for i in range (NUMBER_OF_ROWS):
+			return_all_entries[i][0]=str(red_entries[i][0].get())
+			return_all_entries[i][1]=str(red_entries[i][1].get())
+			return_all_entries[i][2]=str(green_entries[i][0].get())
+			return_all_entries[i][3]=str(green_entries[i][1].get())
+		
+		#remove 1 sided values (should already be gone) and move all as high as possible in array
+		for i in range(NUMBER_OF_ROWS):
+			if return_all_entries[i][0] == '' or return_all_entries[i][1] == '':
+				return_all_entries[i][0] = None
+				return_all_entries[i][1] = None
+			if return_all_entries[i][2] == '' or return_all_entries[i][3] == '':
+				return_all_entries[i][2] = None
+				return_all_entries[i][3] = None
+		
+		for i in range(NUMBER_OF_ROWS):
+			if return_all_entries[i][0]==None:
+				for j in range(i,NUMBER_OF_ROWS):
+					if return_all_entries[j][0] != None:
+						return_all_entries[i][0] = return_all_entries[j][0]
+						return_all_entries[i][1] = return_all_entries[j][1]
+						return_all_entries[j][0]=None
+						return_all_entries[j][1]=None
+			if return_all_entries[i][2]==None:
+				for j in range(i,NUMBER_OF_ROWS):
+					if return_all_entries[j][2] != None:
+						return_all_entries[i][2] = return_all_entries[j][2]
+						return_all_entries[i][3] = return_all_entries[j][3]
+						return_all_entries[j][2]=None
+						return_all_entries[j][3]=None
+		window.destroy()
+					
+			
+	window.protocol("WM_DELETE_WINDOW", closing)
 	window.mainloop()
-	print(a)
+	return return_all_entries
+	
+if __name__ == '__main__':
+	player_entry()
