@@ -19,6 +19,13 @@ Both the pre-requiste packages for the application are now installed.
 
 
 ------------------------------------------------------------------------
+Running the application:
+
+1) Currently, you must install the packages specified and then download the zip file
+2) Next, you can run the main.py from wherever it was saved
+
+
+------------------------------------------------------------------------
 Note:
 
 1) As of now, the command that removes the border for the splash_screen only works on windows, this command makes it invisible on mac
