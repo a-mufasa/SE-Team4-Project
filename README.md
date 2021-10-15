@@ -21,7 +21,7 @@ Both the pre-requiste packages for the application are now installed.
 ------------------------------------------------------------------------
 Running the application:
 
-1) Currently, you must install the packages specified and then download the zip file
+1) Currently, you must install the packages specified and then download the GitHub zip file
 2) Next, you can run the main.py from wherever it was saved
 
 
