@@ -1,7 +1,7 @@
 #!/usr/bin/python
 import psycopg2
 
-def make_connections():
+def make_connections(): #info may change, will need to check periodically
 	a=psycopg2.connect(
 		host="ec2-54-147-93-73.compute-1.amazonaws.com",
 		database="d5og6160bdalf5",
@@ -10,9 +10,10 @@ def make_connections():
 	return a
 
 def local_data():#maybe use in future -- save database here for quick checks, but still maintain ability to edit database when needed (then rerun function to get new table
+	data = None
 	con = None
 	try:
-		print("open")
+		#print("open")
 		con = make_connections()
 		cur = con.cursor() #enables running sql
 		cur.execute('select * from player')
@@ -24,14 +25,14 @@ def local_data():#maybe use in future -- save database here for quick checks, bu
 	finally:
 		if con is not None:
 			con.close()
-			print('close')
+			#print('close')
 	return data
 
 def query(ident, codename=None):
 	ident_string=str(ident)
 	con = None
 	try:
-		print("open")
+		#print("open")
 		con = make_connections()
 		cur = con.cursor() #enables running sql
 		
@@ -54,7 +55,7 @@ def query(ident, codename=None):
 	finally:
 		if con is not None:
 			con.close()
-			print('close')
+			#print('close')
 	
 	return codename
 	

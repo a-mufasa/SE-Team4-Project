@@ -7,9 +7,6 @@ from data_queries import query
 
 
 
-entry=True #skip unnecessary queries
-
-
 def player_entry():	
 
 	#  CONSTANTS
@@ -70,7 +67,6 @@ def player_entry():
 
 
 	def focus_out_handle(event):
-		global entry
 		if (window.focus_get() != None):
 			current_focus[1]=current_focus[0]
 			current_focus[0]=window.focus_get()
@@ -82,14 +78,17 @@ def player_entry():
 				widget_name = "1" #first widget ends in y, replace with 0 to avoid error
 			if (ord(widget_name) % 2 == 1): #left
 				widget_value = current_focus[1].get()
-				
+				if (widget_value == ''):
+					next_widget(current_focus[1]).delete(0,END)
 				if (widget_value.isnumeric()):
 					db_codename=query(str(widget_value))
 					
 					if (db_codename != None):
 						next_widget(current_focus[1]).delete(0,END)
 						next_widget(current_focus[1]).insert(0,db_codename)
-						next_widget(next_widget(current_focus[1])).focus_set()
+						current_focus[1].focus_set()
+						current_focus[0].focus_set()
+						#next_widget(next_widget(current_focus[1])).focus_set()
 						entry=False
 					
 				elif widget_value != "":#allow tab between widgets, but no str
@@ -99,13 +98,10 @@ def player_entry():
 					
 			else:
 				widget_value = current_focus[1].get()
-				if (entry == False):#skip if entered from db
-					entry=True
-					return
-					
-				elif (prev_widget(current_focus[1]).get() != ""):#update databse/widgets
+				if (prev_widget(current_focus[1]).get() != ""):#update databse/widgets
 					query(prev_widget(current_focus[1]).get(),current_focus[1].get())
-					next_widget(current_focus[1]).focus_set()
+					current_focus[0].focus_set()
+					#next_widget(current_focus[1]).focus_set()
 					update_all_widgets(current_focus[1])
 					
 				elif current_focus[1].get() != "":
@@ -113,7 +109,6 @@ def player_entry():
 					prev_widget(current_focus[1]).focus_set()
 					current_focus[1].delete(0,END)
 					
-			print(str(current_focus[0].get()) + " " +str(current_focus[1].get()))
 		else:
 			window.focus() #when coming back to window, reset focus
 		
@@ -168,7 +163,7 @@ def player_entry():
 	f12_button = Button(window, text="F12\nClear\nGame", width=10, height=4, font=helvetica9, fg="green", bg="black")
 	f12_button.place(x=DISTANCE_BETWEEN_BUTTONS * 11, y=Y_CORD_OF_BUTTON)
 	
-	info_label = Label(window, text="<Del> to Delete Player, <ins> to Manually insert, or edit codename", width=106,
+	info_label = Label(window, text="Delete ID to Remove Player, Select to Manually Insert or Edit Codename", width=106,
 					   font=helvetica11, fg="black", bg="white")
 	info_label.place(x=0, y=Y_CORD_OF_BUTTON + 71)
 	
@@ -195,15 +190,6 @@ def player_entry():
 	
 	#  Entries and checkbuttons in Canvases
 	for number_of_row in range(NUMBER_OF_ROWS):
-		'''red_canvas_check_value = IntVar()
-		red_canvas_checkbutton = Checkbutton(red_canvas, variable=red_canvas_check_value, onvalue=1, offvalue=0,
-											 bg=from_rgb((51, 0, 0)), activebackground=from_rgb((51, 0, 0)))
-		red_canvas_checkbutton.place(x=5, y=32 + number_of_row * 28)
-	
-		green_canvas_check_value = IntVar()
-		green_canvas_checkbutton = Checkbutton(green_canvas, variable=green_canvas_check_value, onvalue=1, offvalue=0,
-											   bg=from_rgb((0, 51, 0)), activebackground=from_rgb((0, 51, 0)))
-		green_canvas_checkbutton.place(x=5, y=32 + number_of_row * 28)'''
 	
 		red_canvas_number_of_row_label = Label(red_canvas, text=str(number_of_row+1), font=helvetica8,
 											   bg=from_rgb((51, 0, 0)), fg="white")
