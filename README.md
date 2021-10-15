@@ -29,6 +29,7 @@ Running the application:
 Note:
 
 1) As of now, the command that removes the border for the splash_screen only works on windows, this command makes it invisible on mac
+2) Use the OS terminal rather than an IDE terminal for the installation commands.
 
 
 ------------------------------------------------------------------------
