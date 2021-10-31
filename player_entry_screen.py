@@ -231,13 +231,20 @@ def player_entry():
 		all_entries[4*a+2]=green_entries[a][0]
 		all_entries[4*a+3]=green_entries[a][1]
 	
-	window.bind('<Return>', test_saved_entries)
+	#window.bind('<Return>', test_saved_entries)
 	#window.bind('<FocusIn>', focus_in_handle)
 	window.bind('<FocusOut>', focus_out_handle)
 	
 	
 	return_all_entries=[[None]*4 for i in range(NUMBER_OF_ROWS)]
-	def closing():
+	def closing(key):
+		tmp = window.focus_get()
+		tmp.delete(len(tmp.get())-1,END)
+		print(tmp.get().isnumeric())
+		
+		if tmp.get().isnumeric():
+			next_widget(window.focus_get()).focus_set()
+			focus_out_handle("event")
 		for i in range (NUMBER_OF_ROWS):
 			return_all_entries[i][0]=str(red_entries[i][0].get())
 			return_all_entries[i][1]=str(red_entries[i][1].get())
@@ -271,7 +278,8 @@ def player_entry():
 		window.destroy()
 					
 			
-	window.protocol("WM_DELETE_WINDOW", closing)
+	#window.protocol("WM_DELETE_WINDOW", closing)
+	window.bind('<F5>', closing)
 	window.mainloop()
 	return return_all_entries
 	
