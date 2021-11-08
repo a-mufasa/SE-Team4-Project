@@ -5,7 +5,7 @@ from datetime import datetime
 import time
 import math
 import random
-from play_action_team_score import red_score, green_score
+from player_action_team_score import red_score, green_score
 from player_live_action import red_action, green_action
 from udp_socket import get_recent_hits, udp_socket_receive, udp_socket_send
 import threading
