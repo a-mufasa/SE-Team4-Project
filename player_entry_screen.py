@@ -240,11 +240,8 @@ def player_entry():
 	return_all_entries=[[None]*4 for i in range(NUMBER_OF_ROWS)]
 	def closing(key):
 		tmp = window.focus_get()
-		#print(tmp['textvariable'].get())
-		print(tmp.get())
-		if platform.system() != 'Windows':
+		if platform.system() != 'Windows': #delete f5 character (only needed on mac)
 			tmp.delete(len(tmp.get())-1,END)
-		print(tmp.get())
 		
 		if tmp.get().isnumeric():
 			next_widget(window.focus_get()).focus_set()
