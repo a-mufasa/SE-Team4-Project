@@ -242,10 +242,8 @@ def player_entry():
 		tmp = window.focus_get()
 		if platform.system() != 'Windows': #delete f5 character (only needed on mac)
 			tmp.delete(len(tmp.get())-1,END)
-		
-		if tmp.get().isnumeric():
-			next_widget(window.focus_get()).focus_set()
-			focus_out_handle("event")
+		next_widget(tmp).focus_set()#save current widget
+		focus_out_handle("event")
 		for i in range (NUMBER_OF_ROWS):
 			return_all_entries[i][0]=str(red_entries[i][0].get())
 			return_all_entries[i][1]=str(red_entries[i][1].get())

@@ -77,8 +77,6 @@ def play_action(arr):
 				if int(i[2]) == player_id:
 					return i[3], True #true means green
 			
-			
-			
 		print("player does not exist")
 		return None, None
 	
