@@ -28,8 +28,10 @@ Running the application:
 ------------------------------------------------------------------------
 Note:
 
-1) As of now, the command that removes the border for the splash_screen only works on windows, this command makes it invisible on mac
+1) For mac, the program must show a border with the image (but will now show and windows works as expected)
 2) Use the terminal rather than an IDE for the installation commands.
+3) Currently, this is setup to show examples using the udp function, this requires player_ids 1 and 2 to be on the left and player_ids 3 and 4 to be on the right, will work properly with up to 15 players per team if these are included.
+4) To see this without the udp, comment out lines 229 and 230
 
 
 ------------------------------------------------------------------------
