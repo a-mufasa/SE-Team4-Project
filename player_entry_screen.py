@@ -2,6 +2,7 @@ from tkinter import *
 import tkinter.messagebox
 from tkinter.font import Font
 from data_queries import query
+import platform
 
 
 
@@ -240,7 +241,10 @@ def player_entry():
 	def closing(key):
 		tmp = window.focus_get()
 		#print(tmp['textvariable'].get())
-		tmp.delete(len(tmp.get())-1,END)
+		print(tmp.get())
+		if platform.system() != 'Windows':
+			tmp.delete(len(tmp.get())-1,END)
+		print(tmp.get())
 		
 		if tmp.get().isnumeric():
 			next_widget(window.focus_get()).focus_set()

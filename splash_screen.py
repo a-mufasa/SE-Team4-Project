@@ -1,4 +1,5 @@
 from tkinter import *
+import platform
 
 
 def splash_screen():
@@ -7,8 +8,12 @@ def splash_screen():
     splash_root = Tk()
     splash_root.title("Splash Screen")
     
-    #gets rid of the window boarders
-    splash_root.overrideredirect(True)
+    #gets rid of the window boarders (only on windows)
+    if platform.system() == 'Windows':
+        splash_root.overrideredirect(True)
+
+    else:
+    	splash_root.overrideredirect(False)
         
     #pull image to be shown and label/pack into window
     splash_image = PhotoImage(file="splash_logo.png")
@@ -41,4 +46,3 @@ if __name__ == '__main__':
     #a "main" menu to call the function from.
     
     splash_screen()
-
