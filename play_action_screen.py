@@ -70,12 +70,15 @@ def play_action(arr):
 	
 	def get_codename_team(player_id):
 		for i in arr:
-			i[0]=int(i[0])
-			i[2]=int(i[2])
-			if i[0] == int(player_id):
-				return i[1], False #false means red
-			if i[2] == int(player_id):
-				return i[3], True #true means green
+			if i[0] is not None:
+				if int(i[0]) == player_id:
+					return i[1], False #false means red
+			if i[2] is not None:
+				if int(i[2]) == player_id:
+					return i[3], True #true means green
+			
+			
+			
 		print("player does not exist")
 		return None, None
 	
@@ -110,8 +113,8 @@ def play_action(arr):
 		timer_label = Label(new_frame, bg='blue', fg='white', textvariable = timer_string, font=Font(family='Helvetica', size=15, weight='bold'))
 		timer_label.place(x=ad_width/2,y=0, anchor="n")
 		
-		ad=Label(new_frame, bg='white', fg='black', text='adtop', font=Font(family='Helvetica', size=15, weight='bold'))
-		ad.place(x=ad_width/2,y=WINDOW_HEIGHT, anchor="s")
+		'''ad=Label(new_frame, bg='white', fg='black', text='adtop', font=Font(family='Helvetica', size=15, weight='bold'))
+		ad.place(x=ad_width/2,y=WINDOW_HEIGHT, anchor="s")'''
 
 		
 		new_frame.grid(row=0,column=1,rowspan=3)
@@ -184,6 +187,7 @@ def play_action(arr):
 			window.after(500, update_clock)
 			
 		def update_ads():
+			global new_frame
 			window.after(30000, update_ads)
 		
 		
