@@ -9,9 +9,10 @@ from player_action_team_score import red_score, green_score
 from player_live_action import red_action, green_action
 from udp_socket import get_recent_hits, udp_socket_receive, udp_socket_send
 import threading
+import webbrowser
 
 
-top_left=0;top_right=0;bottom_left=0;bottom_right=0;start_time=0;timer_string=0;test_var=0
+top_left=0;top_right=0;bottom_left=0;bottom_right=0;start_time=0;timer_string=0;test_var=0;middle_frame=0
 	
 	
 
@@ -27,6 +28,7 @@ def play_action(arr):
 	window.minsize(WINDOW_WIDTH, WINDOW_HEIGHT)
 	window.maxsize(WINDOW_WIDTH, WINDOW_HEIGHT)
 	
+	images = [PhotoImage(file="jimmy.png"), PhotoImage(file="rohit.png"), PhotoImage(file="ahmed.png"), PhotoImage(file="fortynite.png")]#create images
 	
 	
 	def test():
@@ -66,7 +68,7 @@ def play_action(arr):
 	countdown_string = StringVar()
 	countdown_label = Label(window, bg='black', fg='white', textvariable = countdown_string, font=Font(family='Helvetica', size=500, weight='bold'))
 	start_time = datetime.now()
-	countdown_length=2
+	countdown_length=30          ###################################################
 	
 	def get_codename_team(player_id):
 		for i in arr:
@@ -81,11 +83,11 @@ def play_action(arr):
 		return None, None
 	
 	def create_frames():
-		global top_left;global top_right;global bottom_left; global bottom_right;global start_time;global timer_string;
+		global top_left;global top_right;global bottom_left; global bottom_right;global start_time;global timer_string;global middle_frame; global ad_button
 		
-		a=Label(window, text="RED", bg='black', fg='red', font=Font(family='Helvetica', size=30, weight='bold'), anchor='n')
+		a=Label(window, text="ALPHA RED", bg='black', fg='red', font=Font(family='Helvetica', size=30, weight='bold'), anchor='n')
 		a.grid(row=0, column = 0)
-		b=Label(window, text="GREEN", bg='black', fg='green', font=Font(family='Helvetica', size=30, weight='bold'), anchor='n')
+		b=Label(window, text="ALPHA GREEN", bg='black', fg='green', font=Font(family='Helvetica', size=30, weight='bold'), anchor='n')
 		b.grid(row=0, column = 2)
 		
 		ad_width=150
@@ -104,18 +106,31 @@ def play_action(arr):
 		bottom_right.grid(row=2,column=2,sticky='se')
 		
 		
-		new_frame=tk.Frame(master=window,width=ad_width,height=WINDOW_HEIGHT,bg='blue')
+		middle_frame=tk.Frame(master=window,width=ad_width,height=WINDOW_HEIGHT,bg='black')
 		
 		timer_string = StringVar()
 		timer_string.set('6:00')
-		timer_label = Label(new_frame, bg='blue', fg='white', textvariable = timer_string, font=Font(family='Helvetica', size=15, weight='bold'))
-		timer_label.place(x=ad_width/2,y=0, anchor="n")
+		timer_label = Label(middle_frame, bg='black', fg='gray80', textvariable = timer_string, font=Font(family='Helvetica', size=20, weight='bold'))
+		timer_label.place(x=ad_width/2,y=25, anchor="center")
 		
-		'''ad=Label(new_frame, bg='white', fg='black', text='adtop', font=Font(family='Helvetica', size=15, weight='bold'))
-		ad.place(x=ad_width/2,y=WINDOW_HEIGHT, anchor="s")'''
+		def when_clicked():
+			global ad_button, ad_image1, ad_image2
+			if ad_button.image == images[0]:
+				webbrowser.open("https://www.artcollectivegallery.com", new=2, autoraise=True)
+			elif ad_button.image == images[1]:
+				webbrowser.open("https://na.op.gg/summoner/userName=Dragon%20Crossing", new=2, autoraise=True)
+			elif ad_button.image == images[2]:
+				webbrowser.open("https://na.op.gg/summoner/userName=DeNoobStomper", new=2, autoraise=True)
+			elif ad_button.image == images[3]:
+				webbrowser.open("https://www.amazon.com/Fort-nite-T-Shirt-Sleeve-Sweatshirt-Hoodie/dp/B09BFKND4R", new=2, autoraise=True)
 
 		
-		new_frame.grid(row=0,column=1,rowspan=3)
+		ad_button=Button(middle_frame, command = when_clicked, borderwidth=0)
+		ad_button.place(x=ad_width/2,y=(WINDOW_HEIGHT+50)/2, anchor="center")
+		#ad_button.pack(side=BOTTOM,borderwidth=0)
+
+		
+		middle_frame.grid(row=0,column=1,rowspan=3)
 		
 		def regrid(new_frame, old_frame):#redraws frames
 			row=old_frame.grid_info().get("row")
@@ -132,7 +147,6 @@ def play_action(arr):
 			#call udp stuff
 			players = get_recent_hits()
 			shooters = [None]*len(players)
-			#shooters_team = [None]*len(players)
 			shot_players = [None]*len(players)
 			shooter_shot_red = []
 			shooter_shot_green = []
@@ -157,7 +171,7 @@ def play_action(arr):
 			tmp = green_score(window, frame_height, frame_width, arr, shooters)
 			top_right=regrid(tmp,top_right)
 			
-			tmp=red_action(window, frame_height, frame_width, shooter_shot_red, bottom_left)#correct variables
+			tmp=red_action(window, frame_height, frame_width, shooter_shot_red, bottom_left)
 			bottom_left=regrid(tmp, bottom_left)
 			
 			
@@ -185,8 +199,13 @@ def play_action(arr):
 			window.after(500, update_clock)
 			
 		def update_ads():
-			global new_frame
-			window.after(30000, update_ads)
+			global middle_frame; global ad_button
+			new_ad = random.choice(images)#random new ad
+			ad_button.configure(image = new_ad)
+			ad_button.image = new_ad
+			ad_button.update()
+
+			window.after(15000, update_ads)
 		
 		
 		update_frames()
@@ -202,7 +221,6 @@ def play_action(arr):
 		difference = (curr_time - start_time)
 		countdown_string.set(str(countdown_length-math.floor(difference.total_seconds())))
 		countdown_label.update()
-		#print(countdown_string.get())
 		if (int(countdown_string.get()) == 0): #start of everything else
 			countdown_label.destroy()
 			t1 = threading.Thread(target=udp_socket_receive, daemon = True)#udp socket
