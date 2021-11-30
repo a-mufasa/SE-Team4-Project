@@ -68,7 +68,7 @@ def play_action(arr):
 	countdown_string = StringVar()
 	countdown_label = Label(window, bg='black', fg='white', textvariable = countdown_string, font=Font(family='Helvetica', size=500, weight='bold'))
 	start_time = datetime.now()
-	countdown_length=30          ###################################################
+	countdown_length=5          ###################################################
 	
 	def get_codename_team(player_id):
 		for i in arr:
@@ -140,7 +140,7 @@ def play_action(arr):
 			
 			return new_frame
 			
-		#update functions
+		#update functions //////////. call from udp to do real time
 		def update_frames():
 			global top_left;global top_right;global bottom_left; global bottom_right
 
@@ -226,8 +226,8 @@ def play_action(arr):
 			t1 = threading.Thread(target=udp_socket_receive, daemon = True)#udp socket
 			t1.start()
 			create_frames() #start create frames after this is done
-			udp_socket_send('1,3')
-			window.after(1200, test)
+			#udp_socket_send('1,3')
+			#window.after(1200, test)
 			
 			
 			#return

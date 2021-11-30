@@ -238,8 +238,8 @@ def player_entry():
 	
 	
 	return_all_entries=[[None]*4 for i in range(NUMBER_OF_ROWS)]
-	def closing(key):
-		tmp = window.focus_get()
+	def closing(key=0):
+		tmp = window.focus_get() ####check if current focus is f5 key/////////////////////////////////
 		if platform.system() != 'Windows': #delete f5 character (only needed on mac)
 			tmp.delete(len(tmp.get())-1,END)
 		next_widget(tmp).focus_set()#save current widget
@@ -278,6 +278,8 @@ def player_entry():
 					
 			
 	#window.protocol("WM_DELETE_WINDOW", closing)
+	f5_button.configure(command = closing)
+	f5_button.command = closing
 	window.bind('<F5>', closing)
 	window.mainloop()
 	return return_all_entries
