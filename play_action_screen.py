@@ -12,7 +12,7 @@ import threading
 import webbrowser
 
 
-top_left=0;top_right=0;bottom_left=0;bottom_right=0;start_time=0;timer_string=0;test_var=0;middle_frame=0
+top_left=0;top_right=0;bottom_left=0;bottom_right=0;start_time=0;timer_string=0;middle_frame=0
 	
 	
 
@@ -29,40 +29,6 @@ def play_action(arr):
 	window.maxsize(WINDOW_WIDTH, WINDOW_HEIGHT)
 	
 	images = [PhotoImage(file="jimmy.png"), PhotoImage(file="rohit.png"), PhotoImage(file="ahmed.png"), PhotoImage(file="fortynite.png")]#create images
-	
-	
-	def test():
-		global test_var
-		if test_var == 0:
-			udp_socket_send('3,1')
-			
-			udp_socket_send('1,4')
-			
-			udp_socket_send('3,1')
-			
-			udp_socket_send('2,4')
-			udp_socket_send('4,1')
-			
-			udp_socket_send('1,3')
-		elif test_var == 1:
-			udp_socket_send('2,4')
-			udp_socket_send('3,2')
-			udp_socket_send('1,3')
-			udp_socket_send('4,2')
-		elif test_var == 2:
-			udp_socket_send('3,2')
-			
-			udp_socket_send('2,4')
-			udp_socket_send('4,2')
-		elif test_var == 3:
-			udp_socket_send('4,2')
-			udp_socket_send('2,4')
-		elif test_var == 4:
-			udp_socket_send('4,2')
-			udp_socket_send('2,3')
-		test_var = random.choice([0,1,2,3,4])
-		window.after(2400, test)
-		
 		
 	
 	countdown_string = StringVar()
@@ -225,12 +191,9 @@ def play_action(arr):
 			countdown_label.destroy()
 			t1 = threading.Thread(target=udp_socket_receive, daemon = True)#udp socket
 			t1.start()
-			create_frames() #start create frames after this is done
-			#udp_socket_send('1,3')
-			#window.after(1200, test)
+			create_frames()
 			
-			
-			#return
+			return
 		else:
 			window.after(250, countdown)
 	
