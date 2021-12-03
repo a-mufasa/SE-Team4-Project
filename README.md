@@ -23,6 +23,7 @@ Running the application:
 
 1) Currently, you must install the packages specified and then download the GitHub zip file
 2) Next, you can run the main.py from wherever it was saved
+3) Then, after entering all players and after countdown, answer prompts in command line (to run given udp code). Note that the countdown for the 6 minute game will start and everything will start working immediately after prompts are answered.
 
 
 ------------------------------------------------------------------------
