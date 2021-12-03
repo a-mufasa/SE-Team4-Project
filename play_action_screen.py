@@ -69,7 +69,7 @@ def play_action(arr):
 	countdown_string = StringVar()
 	countdown_label = Label(window, bg='black', fg='white', textvariable = countdown_string, font=Font(family='Helvetica', size=500, weight='bold'))
 	start_time = datetime.now()
-	countdown_length=5          ###################################################
+	countdown_length=30          ###################################################
 	
 	def get_codename_team(player_id):
 		for i in arr:
