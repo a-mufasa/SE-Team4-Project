@@ -8,11 +8,12 @@ import random
 from player_action_team_score import red_score, green_score
 from player_live_action import red_action, green_action
 from udp_socket import get_recent_hits, udp_socket_receive, udp_socket_send
+from test_udp import test_udp, inputs
 import threading
 import webbrowser
 
 
-top_left=0;top_right=0;bottom_left=0;bottom_right=0;start_time=0;timer_string=0;middle_frame=0
+top_left=0;top_right=0;bottom_left=0;bottom_right=0;start_time=0;timer_string=0;test_var=0;middle_frame=0
 	
 	
 
@@ -29,12 +30,46 @@ def play_action(arr):
 	window.maxsize(WINDOW_WIDTH, WINDOW_HEIGHT)
 	
 	images = [PhotoImage(file="jimmy.png"), PhotoImage(file="rohit.png"), PhotoImage(file="ahmed.png"), PhotoImage(file="fortynite.png")]#create images
+	
+	
+	def test():
+		global test_var
+		if test_var == 0:
+			udp_socket_send('3,1')
+			
+			udp_socket_send('1,4')
+			
+			udp_socket_send('3,1')
+			
+			udp_socket_send('2,4')
+			udp_socket_send('4,1')
+			
+			udp_socket_send('1,3')
+		elif test_var == 1:
+			udp_socket_send('2,4')
+			udp_socket_send('3,2')
+			udp_socket_send('1,3')
+			udp_socket_send('4,2')
+		elif test_var == 2:
+			udp_socket_send('3,2')
+			
+			udp_socket_send('2,4')
+			udp_socket_send('4,2')
+		elif test_var == 3:
+			udp_socket_send('4,2')
+			udp_socket_send('2,4')
+		elif test_var == 4:
+			udp_socket_send('4,2')
+			udp_socket_send('2,3')
+		test_var = random.choice([0,1,2,3,4])
+		window.after(2400, test)
+		
 		
 	
 	countdown_string = StringVar()
 	countdown_label = Label(window, bg='black', fg='white', textvariable = countdown_string, font=Font(family='Helvetica', size=500, weight='bold'))
 	start_time = datetime.now()
-	countdown_length=30          ###################################################
+	countdown_length=5          ###################################################
 	
 	def get_codename_team(player_id):
 		for i in arr:
@@ -116,6 +151,7 @@ def play_action(arr):
 			shot_players = [None]*len(players)
 			shooter_shot_red = []
 			shooter_shot_green = []
+			shooter_shot=[]
 			for i in range(len(players)):
 				players[i][0] = int(players[i][0])
 				players[i][1] = int(players[i][1])
@@ -129,12 +165,13 @@ def play_action(arr):
 					shooter_shot_green.append((shooter,shot))
 				else:
 					shooter_shot_red.append((shooter,shot))
+				shooter_shot.append((shooter,shot))
 				
 			
-			tmp=red_score(window, frame_height, frame_width, arr, shooters)
+			tmp=red_score(window, frame_height, frame_width, arr, shooter_shot)
 			top_left=regrid(tmp, top_left)
 			
-			tmp = green_score(window, frame_height, frame_width, arr, shooters)
+			tmp = green_score(window, frame_height, frame_width, arr, shooter_shot)
 			top_right=regrid(tmp,top_right)
 			
 			tmp=red_action(window, frame_height, frame_width, shooter_shot_red, bottom_left)
@@ -190,10 +227,17 @@ def play_action(arr):
 		if (int(countdown_string.get()) == 0): #start of everything else
 			countdown_label.destroy()
 			t1 = threading.Thread(target=udp_socket_receive, daemon = True)#udp socket
+			t2 = threading.Thread(target=test_udp, daemon = True)
 			t1.start()
-			create_frames()
+			create_frames() #start create frames after this is done
+			inputs()
+			t2.start()
 			
-			return
+			#udp_socket_send('1,3')
+			#window.after(1200, test)
+			
+			
+			#return
 		else:
 			window.after(250, countdown)
 	
@@ -203,8 +247,11 @@ def play_action(arr):
 	label_y = (WINDOW_HEIGHT/2)
 	countdown_label.place(x=label_x,y=label_y, anchor="center")
 	
-	
+	def closing():
+		window.destroy()
+	window.protocol("WM_DELETE_WINDOW", closing)
 	window.mainloop()
+	return 0
 
 
 

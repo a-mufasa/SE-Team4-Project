@@ -74,19 +74,22 @@ def red_score(window, height, width, arr, players):
         for j in range(len(Red_Team_Names)):
             #if player on red team scored a hit increment their score by 10
             #also increment red team total score by 10
-            if players[i] == Red_Team_Names[j]:
-                Red_Scores[j]+=10
-                Red_Total+=10
-                #update labels
-                Red_Team_Label.config(text=str(Red_Total))
-                Red_Score_Labels[j].config(text=Red_Scores[j])
-                #check to see if red teams high score changed
-                if Red_Scores[Red_High] < Red_Scores[j]:
-                    #in testing depending on when the score changed the player who fell out of the
-                    #lead's score would be stuck on black
-                    Red_Score_Labels[Red_High].config(fg="red")
-                    #reassign the high score
-                    Red_High=j
+            if players[i][0] == Red_Team_Names[j] or players[i][1] == Red_Team_Names[j]:
+            	if players[i][0] == Red_Team_Names[j]:
+            		Red_Scores[j]+=100
+            		Red_Total+=100
+            	if players[i][1] == Red_Team_Names[j]:
+            		Red_Scores[j]-=100
+            		Red_Total-=100
+            	#update labels
+            	Red_Team_Label.config(text=str(Red_Total))
+            	Red_Score_Labels[j].config(text=Red_Scores[j])
+            	#check to see if red teams high score changed
+            	if Red_Scores[Red_High] < Red_Scores[j]:
+            		#in testing depending on when the score changed the player who fell out of the
+            		#lead's score would be stuck on black
+            		Red_Score_Labels[Red_High].config(fg="red")
+            		Red_High=j
 
     #can use these here but as it stands now they have to be called from
     #only one of the color_score functions. when they are called in both it breaks. 
@@ -130,9 +133,13 @@ def green_score(window, height, width, arr, players):
         for j in range(len(Green_Team_Names)):
             #if player on green team scored a hit increment their score by 10
             #also increment green team total score by 10
-            if players[i] == Green_Team_Names[j]:
-                Green_Scores[j]+=10
-                Green_Total+=10
+            if players[i][0] == Green_Team_Names[j] or players[i][1] == Green_Team_Names[j]:
+                if players[i][0] == Green_Team_Names[j]:
+                    Green_Scores[j]+=100
+                    Green_Total+=100
+                if players[i][1] == Green_Team_Names[j]:
+                    Green_Scores[j]-=100
+                    Green_Total-=100
                 #update labels
                 Green_Team_Names_Label.config(text=str(Green_Total))
                 Green_Score_Labels[j].config(text=Green_Scores[j])
